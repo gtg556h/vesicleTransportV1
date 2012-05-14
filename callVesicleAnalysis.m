@@ -7,11 +7,9 @@
 %%% displacement units are in meters.
 clear
 clc
-cd ..
-cd sampleData
+cd /Users/brian/doc/research/projects/vesicleTransport/analysis/sampleData/
 load 030112_1_control_pdms_200fps_3_Simple.mat
-cd ..
-cd 20120420_revised
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Put position data in xPos, yPos vectors for each particle
@@ -28,28 +26,36 @@ tol = cNoise*tol;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% Set vector of particles to analyze:  Do this manually by explicitly
-%%%% defining a vector of indices associated w
+%%%% defining a vector of indices associated with the desired particles, or
+%%%% run 'buildParticleList' to view all paticles and select which ones to
+%%%% analyze
 
 buildParticleList;
-%analyze = [nPmax,145,199,242];
 analyze = indexVec
+%analyze = [nPmax,145,199,242];
 
-%%%% Run douglas peucker.  ps provides coordinates of endpoints.  ix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Run douglas peucker algorithm.  ps provides coordinates of endpoints.  ix
 %%%% provides the associated indices associated with endpoints
 for ii = analyze
-    [ps{ii},ix{ii}] = dpsimplify(p{ii},tol);
+    [ps{ii},ix{ii}] = dpsimplify(p{ii},tol);   % p in [m], tol is tolerance defined above
 end
 
-%%%% Establish segment length thresholds to differentiate between directe motion and brownian motion:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Establish segment length thresholds to differentiate between directe
+%%%% motion and brownian motion: Depending on current state of the code,
+%%%% many of these are likely not being used.
 
-cDd = 2*tol;   % Directed motion segment distance threshold
-cBd = 1.5*tol;   % Brownian motion segment distance threshold
-cDv = 1E-7;    % Directed motion segment velocity threshold
-cBv = 1E-7;   % Brownian motion segment velocity 	
-cDt = 20*dt; % Directed motion segment time threshold
-cBt = 50*dt; % Brownian motion segment time threshold
+cDd = 2*tol;   % Directed motion segment distance threshold [m]
+cBd = 1.5*tol;   % Brownian motion segment distance threshold [m]
+cDv = 1E-7;    % Directed motion segment velocity threshold [m]
+cBv = 1E-7;   % Brownian motion segment velocity [m]
+cDt = 20*dt; % Directed motion segment time threshold [m]
+cBt = 50*dt; % Brownian motion segment time threshold [m]
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Actually analyze particles.  This is the core of the analysis.
 for ii = analyze
     %[nDPSegments(ii),segTime{ii},segDist{ii},segV{ii},segType{ii},runV(ii),runTime(ii)] = analyzeSeg(ps{ii},ix{ii},dt,cDd,cBd,cDv,cBv,cDt,cBt);
     [nDPSegments(ii),segTime{ii},segDist{ii},segV{ii},segType{ii},runV{ii},runTime(ii),MSDx{ii},MSDy{ii},MSD{ii},tau{ii},meanLogSlope{ii}] = analyzeSeg2(xPos{ii},yPos{ii},ps{ii},ix{ii},dt,cDt,cBt);
@@ -65,18 +71,10 @@ for ii = analyze
    pause
 end
 
-% SHOULD MY DISCRIMINATING CRITERIA BE A MSD CALCULATION, USING DRIFT COEFFICIENT???
-% Yes, this would be a more suitable approach!!
 
-%[MSDx,MSDy,t,tau] = MSDcalc(x
-
-%[MSDx{1},MSDy{1},t{1},tau{1}] = MSDcalcSeg(75,1,p,ix,dt);
-%[MSDx{2},MSDy{2},t{2},tau{2}] = MSDcalcSeg(75,2,p,ix,dt);
-
-%MSD{1} = sqrt(MSDx{1}.^2+MSDy{1}.^2);
-%MSD{2} = sqrt(MSDx{2}.^2 + MSDy{2}.^2);
-
-%plot(tau{1},MSD{1})%,tau{2},MSD{2})
+%%%%% Post analysis computation: determine the meanLogSlope for segments
+%%%%% considered active transport for all particles in analysis:
+%%%%% MODIFY THIS TO RUN ON ALL PARTICLES!!!!!
 accumCount = 0;
 accumMLS = 0;
 for ii=75
