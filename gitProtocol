@@ -1,0 +1,10 @@
+create file
+
+>>> git add <file>
+
+>>> git commit -m 'information'
+
+>>> git push <remote> master
+
+>>> git fetch <remote>
+>>> git merge <remote>/master
