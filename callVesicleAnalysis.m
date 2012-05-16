@@ -7,9 +7,14 @@
 %%% displacement units are in meters.
 clear
 clc
-cd /Users/brian/doc/research/projects/vesicleTransport/analysis/sampleData/
-load 030112_1_control_pdms_200fps_3_Simple.mat
+% Mac location:
+% cd /Users/brian/doc/research/projects/vesicleTransport/analysis/sampleData/
 
+% Erdos location:
+set(0,'defaultfigureposition',[330 330 560 420])
+cd /home/brian/doc/research/projects/vesicleTransport/analysis/sampleData
+load 030112_1_control_pdms_200fps_3_Simple.mat
+addpath /home/brian/code/matlab/vesicleTransport
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Put position data in xPos, yPos vectors for each particle
