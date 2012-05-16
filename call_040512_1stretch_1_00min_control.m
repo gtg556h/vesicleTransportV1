@@ -71,7 +71,7 @@ cBt = 50*dt; % Brownian motion segment time threshold [m]
 %%% Actually analyze particles.  This is the core of the analysis.
 for ii = analyze
     %[nDPSegments(ii),segTime{ii},segDist{ii},segV{ii},segType{ii},runV(ii),runTime(ii)] = analyzeSeg(ps{ii},ix{ii},dt,cDd,cBd,cDv,cBv,cDt,cBt);
-    [nDPSegments(ii),segTime{ii},segDist{ii},segV{ii},segType{ii},runV{ii},runTime(ii),MSDx{ii},MSDy{ii},MSD{ii},tau{ii},meanLogSlope{ii}] = analyzeSeg2(xPos{ii},yPos{ii},ps{ii},ix{ii},dt,cDt,cBt);
+    [nDPSegments(ii),segTime{ii},segDist{ii},segV{ii},segType{ii},runV(ii),runTime(ii),MSDx{ii},MSDy{ii},MSD{ii},tau{ii},meanLogSlope{ii}] = analyzeSeg2(xPos{ii},yPos{ii},ps{ii},ix{ii},dt,cDt,cBt);
 end
 
 
@@ -87,21 +87,14 @@ end
 
 %%%%% Post analysis computation: determine the meanLogSlope for segments
 %%%%% considered active transport for all particles in analysis:
-
+%%%%% MODIFY THIS TO RUN ON ALL PARTICLES!!!!!
 accumCount = 0;
 accumMLS = 0;
-meanRunTime = 0;   % This variable sucks
-meanRunTimeIndex = 0;
+meanRunTime = 0;
 meanRunV = 0;
-meanRunVIndex = 0;
 for ii = analyze
-    
-	meanRunTime = meanRunTime + runTime(ii);
-	meanRunTimeIndex = meanRunTimeIndex + 1;
-    if runV(ii) > 0
-        meanRunV = meanRunV + runV(ii);
-	meanRunVIndex = meanRunVIndex + 1;
-    end
+    meanRunTime = meanRunTime + runTime(ii);
+    meanRunV = meanRunV + runV(ii);
     for jj = 1:length(meanLogSlope{ii})
         if segType{ii}(jj) == 3
             accumMLS = accumMLS + meanLogSlope{ii}(jj);
@@ -109,8 +102,7 @@ for ii = analyze
         end
     end
 end
-tol
 meanMLS  = accumMLS/accumCount
-meanRunTime = meanRunTime/meanRunTimeIndex
-meanRunV = meanRunV/meanRunVIndex
+meanRunTime = meanRunTime/length(analyze)
+meanRunV = meanRunV/length(analyze)
 
