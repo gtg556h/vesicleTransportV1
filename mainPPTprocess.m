@@ -7,7 +7,7 @@
 
 %%%%%%%%%%%% Declare Constants
 
-data = dataR5;
+%data = dataR5;
 
 fps = 200;  % framerate
 dt = 1/fps; % timestep
