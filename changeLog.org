@@ -1,0 +1,10 @@
+Vesicle Transport Matlab ChangeLog:
+-----------------------------------------
+-----------------------------------------
+* 20120531: 
+Current state of code: continuousMSD written and operational. Execution of code provides state of particle as either active or passive depending on the meanLogSlope of the MSD calculated by particle behavior centered around the current timestep.  
+
+In the current configuration, the smoothVelocity is not calculated.  Possible methods for generating this information:
+** DPSimplify: Find DP segment containing the current point, associate DP velocity with this point.
+** Smooth velocity:  Find approximate velocity by averaging say 20 points around the current timestep
+** Generate segments based on persistance of state: ie, >95% state 1 associated with active semgment. 

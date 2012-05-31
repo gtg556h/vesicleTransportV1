@@ -7,9 +7,11 @@
 %%% displacement units are in meters.
 clear
 clc
-cd /Users/brian/doc/research/projects/vesicleTransport/analysis/sampleAplysiaData/
+cd ..
+cd sampleData
 load 030112_1_control_pdms_200fps_3_Simple.mat
-
+cd ..
+cd 20120420_revised
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Put position data in xPos, yPos vectors for each particle
