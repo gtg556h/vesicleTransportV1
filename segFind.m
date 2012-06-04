@@ -19,9 +19,11 @@ segLength = diff(event);
 % 2 denotes undetermined
 % 3 denotes active
 
+threshold = 1;
+
 for ii = 1:nSeg
     if segLength(ii)>20
-        if x(event(ii)+1) < 1
+        if x(event(ii)+1) < threshold
             segType(ii) = 1;
         else
             segType(ii) = 3;
