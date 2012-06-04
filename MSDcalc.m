@@ -1,4 +1,5 @@
-function [MSDx, MSDy, t, tau] = MSDcalc(x, y, dt)
+function [MSDx, MSDy, tau] = MSDcalc(x, y, dt)
+% note: removed t output on 2012.06.04
 
 
 n = length(x);
