@@ -7,8 +7,14 @@ x2 = [0;x];
 % indexRise = x1>1 & x2 <1;
 % indexFall = x1<1 & x2 >1;
 
-event = find((x1<1 & x2>=1)|(x1>1 & x2<=1));
-event = [1;event;length(x)];
+event = find((x1<1 & x2>=1)|(x1>1 & x2<=1))
+if isempty(event)==0
+    if event(length(event)) > length(x)
+        event(length(event)) = []
+    end
+end    
+    
+event = [1;event;length(x)]
 
 nSeg = length(event)-1;
 

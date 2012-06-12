@@ -33,11 +33,8 @@ dy = dx;
 %buildParticleListManual;  % FUNCTION TO MANUALLY SELECT PARTICLES
 %analyze = indexVec;
 analyze = [2 6];% 7 18 6 179 15 69 204];
-analyze = [2 6 7 8 10 15 86 94 110 195 204 395 397 403 425 475 476 578 626];
-% clear analyze;
-% analyze = [13];
-% Analyze for particle 13! Gives -1 segLength.  Source in segFind (likely
-% using length of x1 instead of x)
+analyze = [2 4 6 7 8 10 13 15 18 69 86 94 110 195 204 395 397 403 425 475 476 578 626];
+
 %% Declare continuout MSD parameters
 maxTau = 260E-3;
 startIndex = round(maxTau/2/dt);
@@ -97,9 +94,6 @@ for ii = analyze
     meanStagV(ii) = accumP/countP;
 end
 
-meanRunV
-meanStagV
-
 smoothFactor = 30;
 for ii = analyze
     [event{ii},segLength{ii},segType{ii},nSeg(ii)] = segFind(meanLogSlope{ii},smoothFactor);
@@ -113,4 +107,5 @@ for ii = analyze
     clf
 end
 
+hist(meanRunV(analyze)./meanStagV(analyze))
 
