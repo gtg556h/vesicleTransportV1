@@ -9,7 +9,12 @@ for ii = startIndex + 1:lengthVec - startIndex
     yVec = yPos(ii-startIndex:ii+startIndex);
     [MSDx{ii}, MSDy{ii}, tau{ii}] = MSDcalc(xVec,yVec,dt);
     MSD{ii} = sqrt(MSDx{ii}.^2 + MSDy{ii}.^2);
-    meanLogSlope(ii) = log(MSD{ii}(slopeMax/dt)/MSD{ii}(slopeMin/dt))/log(slopeMax/slopeMin);
+    %[slope, intercept] = logfit(tau{ii}(slopeMin/dt:slopeMax/dt),MSD{ii}(slopeMin/dt:slopeMax/dt),'loglog');
+    %meanLogSlope(ii) = slope;
+    %meanLogSlope(ii) = log(MSD{ii}(slopeMax/dt)/MSD{ii}(slopeMin/dt))/log(slopeMax/slopeMin);
+    linFit = polyfit(log(tau{ii}(slopeMin/dt:slopeMax/dt))',log(MSD{ii}(slopeMin/dt:slopeMax/dt)),1);
+    meanLogSlope(ii) = linFit(1);
+    
 end
 
 

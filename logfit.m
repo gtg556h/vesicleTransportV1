@@ -434,39 +434,39 @@ holdState=ishold;
 
 %% Plot the data
 % This one is just to get the legend right
-plot(x,y,markerType,'markersize',markerSize,'linewidth',2);
+%plot(x,y,markerType,'markersize',markerSize,'linewidth',2);
 
 %% Plot the approximate line
-hold('on'); % in case hold off was on before
-plot(ex,yy,'--','linewidth',lineWidth,'color',lineColor);
+%hold('on'); % in case hold off was on before
+%plot(ex,yy,'--','linewidth',lineWidth,'color',lineColor);
 
 %% Plot the points
 % This time again just so it appears on top of the other line.
-plot(x,y,markerType,'markersize',markerSize,'linewidth',2);
+%plot(x,y,markerType,'markersize',markerSize,'linewidth',2);
 
 %% Set the axis and to scale correctly
-switch graphType
-    case 'logy'
-        set(a,'yscale','log');
-     case 'logx'
-        set(a,'xscale','log');
-    case 'loglog'
-        set(a,'xscale','log','yscale','log');
-    case 'linear'
-        set(a,'xscale','linear','yscale','linear');
-end
+%switch graphType
+%     case 'logy'
+%         set(a,'yscale','log');
+%      case 'logx'
+%         set(a,'xscale','log');
+%     case 'loglog'
+%         set(a,'xscale','log','yscale','log');
+%     case 'linear'
+%         set(a,'xscale','linear','yscale','linear');
+% end
 
 %% Finish up some graph niceties
 % fix the graph limits.
 % no idea why this is always needed
-axis('tight');
+%axis('tight');
 
-legend('data',[graphType ' fit'],'location','best'); legend('boxoff');
+%legend('data',[graphType ' fit'],'location','best'); legend('boxoff');
 
 % reset hold state
-if ~holdState
-    hold('off');
-end
+%if ~holdState
+%    hold('off');
+%end
 
 %% set output data
 % before returning
