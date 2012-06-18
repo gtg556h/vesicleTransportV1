@@ -1,4 +1,4 @@
-function [MSD, meanLogSlope, tau, xPos, yPos, t] = continuousMSD(xPos, yPos, maxTau, slopeMin, slopeMax, dt)
+function [MSD, meanLogSlope, tau, xPosShort, yPosShort, t] = continuousMSD(xPos, yPos, maxTau, slopeMin, slopeMax, dt)
 
 startIndex = round(maxTau/2/dt);
 lengthVec = length(xPos);
@@ -20,7 +20,7 @@ end
 
 % Truncate meanLogSlope and xPos, yPos to get rid of startIndex:
 
-xPos = xPos(startIndex+1:lengthVec-startIndex);
-yPos = yPos(startIndex+1:lengthVec-startIndex);
+xPosShort = xPos(startIndex+1:lengthVec-startIndex);
+yPosShort = yPos(startIndex+1:lengthVec-startIndex);
 meanLogSlope = meanLogSlope(startIndex+1:lengthVec-startIndex);
 t = 0:dt:(length(xPos)-1)*dt;

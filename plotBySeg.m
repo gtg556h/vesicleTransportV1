@@ -16,6 +16,7 @@ for ii = 1:nSegments
     elseif segType(ii) == 3
         plot(xPos(ix(ii):ix(ii+1)),yPos(ix(ii):ix(ii+1)),'g');
     end
+    axis equal
 end
 hold off
 
