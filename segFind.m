@@ -1,4 +1,4 @@
-function [event, segLength, segType, nSeg, segDir,segDistance,segTime,percentActive] = segFind(meanLogSlope,direction,xPos,yPos,smoothFactor,dt)
+function [event, segLength, segState, nSeg, segDir,segDistance,segTime,percentActive] = segFind(meanLogSlope,direction,xPos,yPos,smoothFactor,dt)
 
 %% Define threshold: Active for MSD log slope > threshold etc...
 threshold = 1;
@@ -35,14 +35,19 @@ segLength = diff(event); % Number of time steps,
 for ii = 1:nSeg
     if segLength(ii)>20
         if x(event(ii)+1) < threshold
-            segType(ii) = 1;
+            segState(ii) = 1;
         else
-            segType(ii) = 3;
+            segState(ii) = 3;
         end
     else
-        segType(ii) = 2;
+        segState(ii) = 2;
     end
 end
+
+% script filled segType here
+% for ii = 1:nSeg
+    
+
 
 %% Determine average direction for each segment: 
 for ii = 1:nSeg
@@ -62,7 +67,7 @@ for ii=1:nSeg
 end
 
 %% Determine percent time active for particle (intentionally doesn't include indeterminate segments!)
-percentActive = sum(segTime(find(segType==3)))/(sum(segTime(find(segType==3)))+sum(segTime(find(segType==1))));
+percentActive = sum(segTime(find(segState==3)))/(sum(segTime(find(segState==3)))+sum(segTime(find(segState==1))));
 
 
 

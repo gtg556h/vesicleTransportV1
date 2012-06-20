@@ -1,4 +1,4 @@
-%$%%%%% SCRIPT FILLED SEGTYPE IN segFind.m
+
 
 clear
 clc
@@ -72,18 +72,16 @@ end
 % end
 
 
-%% Raw velocity calculation: Note: smooth vx, vy to get rid of high frequency component
+%% Raw velocity calculation
 for ii = analyze
-    xPosLongSmooth{ii} = smooth(xPosLong{ii},25);
-    yPosLongSmooth{ii} = smooth(yPosLong{ii},25);
-   
     for jj = 1:length(xPos{ii})
-        vx{ii}(jj) = (xPosLongSmooth{ii}(jj+startIndex+1) - xPosLongSmooth{ii}(jj+startIndex-1))/(2*dt);
-        vy{ii}(jj) = (yPosLongSmooth{ii}(jj+startIndex+1) - yPosLongSmooth{ii}(jj+startIndex-1))/(2*dt);
+        vx{ii}(jj) = (xPosLong{ii}(jj+startIndex+1) - xPosLong{ii}(jj+startIndex-1))/(2*dt);
+        vy{ii}(jj) = (yPosLong{ii}(jj+startIndex+1) - yPosLong{ii}(jj+startIndex-1))/(2*dt);
     end    
+%     vx{ii} = smooth(diff(xPos{ii})/dt,30);
+%     vy{ii} = smooth(diff(yPos{ii})/dt,30);
     v{ii} = sqrt(vx{ii}.^2+vy{ii}.^2);
-    vSmooth{ii} = v{ii};
-
+    vSmooth{ii} = smooth(v{ii},20);
 end  
 
 %% Calculate angle by linear fit of neighborhood
@@ -128,7 +126,7 @@ end
 smoothFactor = 30;  %% Important! 
 
 for ii = analyze
-    [event{ii},segLength{ii},segState{ii},nSeg(ii),segDir{ii},segDistance{ii},segTime{ii},percentActive(ii)] = segFind(meanLogSlope{ii},direction{ii},xPos{ii},yPos{ii},smoothFactor,dt);
+    [event{ii},segLength{ii},segType{ii},nSeg(ii),segDir{ii},segDistance{ii},segTime{ii},percentActive(ii)] = segFind(meanLogSlope{ii},direction{ii},xPos{ii},yPos{ii},smoothFactor,dt);
 end
 % Note: event is identical to ix{} in DPsimplify output
 % Note: setType = 1 implies passive motion, 2 implies undetermined, and 3
@@ -138,7 +136,7 @@ end
 %% Plot trajectories, color coded by transport state
 figure
 for ii = analyze
-    plotBySeg(xPos{ii}, yPos{ii},event{ii},segState{ii})
+    plotBySeg(xPos{ii}, yPos{ii},event{ii},segType{ii})
     title('Plot by segment transport state')
     pause
     %plotByDir(xPos{ii},yPos{ii},direction{ii})
@@ -160,7 +158,7 @@ end
 
 %% Plot histogram of distance travelled in active segments
 for ii = analyze
-    hist(segDistance{ii}(find(segState{ii}==3)))
+    hist(segDistance{ii}(find(segType{ii}==3)))
     pause
 end
 
@@ -213,9 +211,7 @@ close all
 
 % segLength
 
-% segState
-
-% State
+% segType
 
 % nSeg
 
