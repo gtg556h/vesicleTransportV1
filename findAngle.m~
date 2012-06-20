@@ -1,6 +1,7 @@
 %% Script to find smooth angle by linear fit in local region
 
-function [theta] = findAngle(vx,vy)
+function [theta] = findAngle(xPosLong,yPosLong,startIndex)
+
 
 % diffVector = diff(xPosLong) + i*diff(yPosLong);
 % 
@@ -9,9 +10,4 @@ function [theta] = findAngle(vx,vy)
 %     theta(ii-startIndex) = mod(theta(ii-startIndex),2*pi);
 % end
 
-
-
-for ii = 1:length(vx)
-    theta(ii) = angle(vx(ii)+i*vy(ii));
-    theta(ii) = mod(theta(ii),2*pi);
-end
+diffVector = diff(xPos) + 

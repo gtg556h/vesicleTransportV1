@@ -1,4 +1,4 @@
-function [event, segLength, segType, nSeg, segDir,segDistance,segTime,percentActive] = segFind(meanLogSlope,direction,xPos,yPos,smoothFactor,dt)
+function [event, segLength, segType, nSeg, segDir,segDistance] = segFind(meanLogSlope,direction,xPos,yPos,smoothFactor)
 
 %% Define threshold: Active for MSD log slope > threshold etc...
 threshold = 1;
@@ -54,15 +54,4 @@ for ii = 1:nSeg
     end
 end
 
-%% Determine segDistance and segTime
-
-for ii=1:nSeg
-    segTime(ii) = segLength(ii)*dt; %[sec]
-    segDistance(ii) = sqrt((xPos(event(ii+1))-xPos(event(ii)))^2+(yPos(event(ii+1))-yPos(event(ii)))^2); %[m]
-end
-
-%% Determine percent time active for particle (intentionally doesn't include indeterminate segments!)
-percentActive = sum(segTime(find(segType==3)))/(sum(segTime(find(segType==3)))+sum(segTime(find(segType==1))));
-
-
-
+%% Determine

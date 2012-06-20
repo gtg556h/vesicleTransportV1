@@ -13,7 +13,7 @@ load 1_03min_stretch20_pdms_200fps_extrac.mat
 cd(x)
 
 %% Define direction away from cell body, [0,2pi], 0 associated with positive x-direction
-theta0 = 0;   %radians
+theta0 = 0.6266;   %radians
 
 %% Add vesicleTransport library to path
 addpath ~/git/vesicleTransport
@@ -53,7 +53,10 @@ for ii = analyze
     [MSD{ii}, meanLogSlope{ii}, tau{ii}, xPos{ii}, yPos{ii}, t{ii}] = continuousMSD(xPos{ii}, yPos{ii}, maxTau, slopeMin, slopeMax, dt);
 end
 
-
+%% Calculate angle by linear fit of neighborhood
+for ii = analyze
+    theta{ii} = findAngle(xPosLong{ii},yPosLong{ii},startIndex)
+end
 
 
 %% Smooth meanLogSlope
@@ -64,7 +67,7 @@ for ii = analyze
 %     pause
 end
 % 
-%% Plot things (MSD video of sorts)
+%% Plot things
 % for ii = 300:1458
 %     loglog(tau{2}{ii},MSD{2}{ii},'b',tau{6}{ii},MSD{6}{ii},'r')
 %     axis([0 1 1E-16 1E-14])
@@ -72,27 +75,18 @@ end
 % end
 
 
-%% Raw velocity calculation
+%% Raw velocity calculation and estimation of runV, stagV
 for ii = analyze
-    for jj = 1:length(xPos{ii})
-        vx{ii}(jj) = (xPosLong{ii}(jj+startIndex+1) - xPosLong{ii}(jj+startIndex-1))/(2*dt);
-        vy{ii}(jj) = (yPosLong{ii}(jj+startIndex+1) - yPosLong{ii}(jj+startIndex-1))/(2*dt);
-    end    
-%     vx{ii} = smooth(diff(xPos{ii})/dt,30);
-%     vy{ii} = smooth(diff(yPos{ii})/dt,30);
+    vx{ii} = smooth(diff(xPos{ii})/dt,30);
+    vy{ii} = smooth(diff(yPos{ii})/dt,30);
     v{ii} = sqrt(vx{ii}.^2+vy{ii}.^2);
-    vSmooth{ii} = smooth(v{ii},20);
+    vSmooth{ii} = v{ii};
 end  
-
-%% Calculate angle by linear fit of neighborhood
-for ii = analyze
-    theta{ii} = findAngle(vx{ii},vy{ii});
-end
 
 %% Determine direction. 1 -> moving away from cell body. 0 -> moving toward cell body for ii = analyze
 for ii = analyze
     for jj = 1:length(theta{ii})
-        if abs(theta{ii}(jj)-theta0)<pi/2 | abs(theta{ii}(jj)-theta0)>3*pi/2
+        if abs(theta{ii}(jj)-theta0)<pi/4 | abs(theta{ii}(jj)-theta0)>3*pi/4
             direction{ii}(jj) = 1;
         else
             direction{ii}(jj) = 0;
@@ -126,7 +120,7 @@ end
 smoothFactor = 30;  %% Important! 
 
 for ii = analyze
-    [event{ii},segLength{ii},segType{ii},nSeg(ii),segDir{ii},segDistance{ii},segTime{ii},percentActive(ii)] = segFind(meanLogSlope{ii},direction{ii},xPos{ii},yPos{ii},smoothFactor,dt);
+    [event{ii},segLength{ii},segType{ii},nSeg(ii)] = segFind(meanLogSlope{ii},smoothFactor);
 end
 % Note: event is identical to ix{} in DPsimplify output
 % Note: setType = 1 implies passive motion, 2 implies undetermined, and 3
@@ -137,89 +131,15 @@ end
 figure
 for ii = analyze
     plotBySeg(xPos{ii}, yPos{ii},event{ii},segType{ii})
-    title('Plot by segment transport state')
     pause
     %plotByDir(xPos{ii},yPos{ii},direction{ii})
     %pause
     clf
 end
 
-%% Plot by mean segment direction
-for ii = analyze
-    plotBySegDir(xPos{ii},yPos{ii},event{ii},segDir{ii})
-    title('Plot by segment direction, green away from body')
-    pause
-    clf
-end
 
-% 
-% hist(meanRunV(analyze)./meanStagV(analyze))
-% pause
 
-%% Plot histogram of distance travelled in active segments
-for ii = analyze
-    hist(segDistance{ii}(find(segType{ii}==3)))
-    pause
-end
-
+hist(meanRunV(analyze)./meanStagV(analyze))
+pause
 close all
-%% Summary of variables:
-% 
-% xPos: x-position of particle [m]
-
-% yPos: y-position of particle [m]
-
-% dt: video timestep [sec]
-
-% dx/dy: pixel size [m]
-
-% analyze: vector of indices for particles to be analyzed
-
-% maxTau: max timescale to calculate MSD.  Determines width of window
-% sampled around each point, and consequentially the number of time points
-% that are discarded at the beginning of xPos and yPos
-
-% xPosLong: After discarding maxTau/dt/2 at beginning of xPos and yPos,
-% xPosLong contains the entire original position vector, in case needed
-
-
-% startIndex
-
-% MSD: Mean square displacement
-
-% meanLogSlope: slope of linear fit of loglog for MSD
-
-% tau: timescale, abscissa of MSD
-
-% slopeMin: minimum timescale in range of MSD used to calculate
-% meanLogSlope
-
-% slopeMax: max timescale tau in range of MSD used to calculate
-% meanLogSlope
-
-% theta: angle of 
-
-% vSmooth
-
-% direction
-
-% meanRunV
-
-% meanStagV
-
-% event
-
-% segLength
-
-% segType
-
-% nSeg
-
-%segDir
-
-% segDistance
-
-% segTime
-
-% percentActive
 
