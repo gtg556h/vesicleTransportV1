@@ -128,7 +128,7 @@ end
 smoothFactor = 30;  %% Important! 
 
 for ii = analyze
-    [event{ii},segLength{ii},segState{ii},state{ii},nSeg(ii),segDir{ii},segDistance{ii},segTime{ii},percentActive(ii)] = segFind(meanLogSlope{ii},direction{ii},xPos{ii},yPos{ii},smoothFactor,dt);
+    [event{ii},segLength{ii},segState{ii},nSeg(ii),segDir{ii},segDistance{ii},segTime{ii},percentActive(ii)] = segFind(meanLogSlope{ii},direction{ii},xPos{ii},yPos{ii},smoothFactor,dt);
 end
 % Note: event is identical to ix{} in DPsimplify output
 % Note: setType = 1 implies passive motion, 2 implies undetermined, and 3
@@ -148,10 +148,10 @@ end
 
 %% Plot by mean segment direction
 for ii = analyze
-%     plotBySegDir(xPos{ii},yPos{ii},event{ii},segDir{ii})
-%     title('Plot by segment direction, green away from body')
-%     pause
-%     clf
+    plotBySegDir(xPos{ii},yPos{ii},event{ii},segDir{ii})
+    title('Plot by segment direction, green away from body')
+    pause
+    clf
 end
 
 % 
@@ -159,25 +159,9 @@ end
 % pause
 
 %% Plot histogram of distance travelled in active segments
-% for ii = analyze
-%     hist(segDistance{ii}(find(segState{ii}==3)))
-%     pause
-% end
-clf
-%% Plot 'bimodal' histogram of active velocities, one for direction=1, other for direction=0:
-% for ii = analyze
-%     hist(vSmooth{ii}(find(state{ii}==3 & direction{ii}==1)))
-%     hold on
-%     hist(-vSmooth{ii}(find(state{ii}==3 & direction{ii}==0)))
-%     pause
-% end
-
 for ii = analyze
-    Q = vSmooth{ii}(find(state{ii}==3 & direction{ii}==1));
-    R = vSmooth{ii}(find(state{ii}==3 & direction{ii}==0));
-    histPair(Q,R)
+    hist(segDistance{ii}(find(segState{ii}==3)))
     pause
-    clf
 end
 
 close all
@@ -215,37 +199,27 @@ close all
 % slopeMax: max timescale tau in range of MSD used to calculate
 % meanLogSlope
 
-% theta: angle of current velocity, [0,2pi]
+% theta: angle of 
 
-% vSmooth: Smooth magnitude of velocity.  Critical to smooth vx, vy prior
-% to computing vSmooth to get rid of high velocity, high frequency,
-% brownian component
+% vSmooth
 
-% direction: equals one if vesicle is travelling away from cell body, zero
-% if vesicle is travelling towards cell body
+% direction
 
-% meanRunV: average of smooth velocity for a vesicle for all timepoints
-% that state is equal to 3 (active)
+% meanRunV
 
-% meanStagV: average of smooth velocity for a vesicle for all timepoints
-% that state is equal to 1 (passive)
+% meanStagV
 
-% event: vector of indices associated with the points that meanLogSlope
-% crosses the threshold.  Thus, these points correspond with a change in
-% variable 'state'.  All indices between a pair of events make up a
-% segment.
+% event
 
-% segLength:  vector (not physical) length of each segment
+% segLength
 
-% nSeg: Number of segments identified for a vesicle.
+% segState
 
-% segState: state (1 for passive, 2 for undetermined, 3 for active) for a
-% segment.  vector is nSegments long
+% State
 
-% state: filled state vector (length = length(xPos) with same content as
-% segState.
+% nSeg
 
-% segDir:
+%segDir
 
 % segDistance
 

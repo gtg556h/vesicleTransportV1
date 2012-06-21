@@ -1,4 +1,4 @@
-function [event, segLength, segState, nSeg, segDir,segDistance,segTime,percentActive] = segFind(meanLogSlope,direction,xPos,yPos,smoothFactor,dt)
+function [event, segLength, segState, state, nSeg, segDir,segDistance,segTime,percentActive] = segFind(meanLogSlope,direction,xPos,yPos,smoothFactor,dt)
 
 %% Define threshold: Active for MSD log slope > threshold etc...
 threshold = 1;
@@ -44,8 +44,11 @@ for ii = 1:nSeg
     end
 end
 
-% script filled segType here
-% for ii = 1:nSeg
+%% script filled segType here
+for ii = 1:nSeg
+    state(event(ii):event(ii+1)-1)=segState(ii);
+end
+state(length(state)+1) = state(length(state));
     
 
 
