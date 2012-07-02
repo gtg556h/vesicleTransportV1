@@ -103,13 +103,39 @@ for ii = analyze
         vDPSegY = (ps{ii}(jj+1,2) - ps{ii}(jj,2))/(ix{ii}(jj+1)-ix{ii}(jj))/dt;
         vDPSeg{ii}(jj) = sqrt(vDPSegX^2 + vDPSegY^2);
         vDP{ii}(ix{ii}(jj):ix{ii}(jj+1)-1) = vDPSeg{ii}(jj);
-        theta{ii}(ix{ii}(jj):ix{ii}(jj+1)-1) = findAngle(vDPSegX,vDPSegY);
+        thetaDP{ii}(ix{ii}(jj):ix{ii}(jj+1)-1) = findAngle(vDPSegX,vDPSegY);
     end
     vDP{ii}(length(vDP{ii})+1) = vDP{ii}(length(vDP{ii}));
-    theta{ii}(length(theta{ii}+1)) = theta{ii}(length(theta{ii}));
+    thetaDP{ii}(length(thetaDP{ii}+1)) = thetaDP{ii}(length(thetaDP{ii}));
+    DPSegLength{ii} = diff(ix{ii});
+    
+    for jj = 1:nDPSeg(ii)
+        if DPSegLength{ii}(jj)<20
+            vDP{ii}(ix{ii}(jj):ix{ii}(jj+1)-1) = vSmooth{ii}(ix{ii}(jj):ix{ii}(jj+1)-1);
+        end
+    end
 end
 
+figure
+hist(vDP{analyze(1)},20)
+hold on
+hist(-vSmooth{analyze(1)},20)
+pause
+close all
+
+figure
+subplot(1,2,1)
+rose(theta{analyze(1)})
+legend('Original theta')
+subplot(1,2,2)
+rose(thetaDP{analyze(1)})
+legend('DP theta')
+pause
+close all
+
 clear vDPSegX vDPSegY
+
+
 
 %% Determine direction. 1 -> moving away from cell body. 0 -> moving toward cell body for ii = analyze
 for ii = analyze
@@ -154,6 +180,16 @@ end
 % Note: setType = 1 implies passive motion, 2 implies undetermined, and 3
 % implies active transport
 
+
+%% Use DP information to determin run lengths of events determined by running MSD
+% To accomplish, simply integrate the DP velocity over the time points
+% associated with a single event:
+for ii = analyze
+    for jj = 1:nSeg(ii)
+        DPRunDistance{ii}(jj) = sum(vDP{ii}(event{ii}(jj):event{ii}(jj+1)-1))*dt;
+    end
+end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Start plots
 
@@ -169,12 +205,12 @@ for ii = analyze
 end
 
 %% Plot by mean segment direction
-for ii = analyze
-    plotBySegDir(xPos{ii},yPos{ii},event{ii},segDir{ii})
-    title('Plot by segment direction, green away from body')
-    pause
-    clf
-end
+% for ii = analyze
+%     plotBySegDir(xPos{ii},yPos{ii},event{ii},segDir{ii})
+%     title('Plot by segment direction, green away from body')
+%     pause
+%     clf
+% end
 
 % 
 % hist(meanRunV(analyze)./meanStagV(analyze))
@@ -194,13 +230,13 @@ clf
 %     pause
 % end
 
-for ii = analyze
-    Q = vSmooth{ii}(find(state{ii}==3 & direction{ii}==1));
-    R = vSmooth{ii}(find(state{ii}==3 & direction{ii}==0));
-    histPair(Q,R)
-    pause
-    clf
-end
+% for ii = analyze
+%     Q = vSmooth{ii}(find(state{ii}==3 & direction{ii}==1));
+%     R = vSmooth{ii}(find(state{ii}==3 & direction{ii}==0));
+%     histPair(Q,R)
+%     pause
+%     clf
+% end
 
 close all
 %% Summary of variables:
@@ -221,7 +257,6 @@ close all
 
 % xPosLong: After discarding maxTau/dt/2 at beginning of xPos and yPos,
 % xPosLong contains the entire original position vector, in case needed
-
 
 % startIndex
 
