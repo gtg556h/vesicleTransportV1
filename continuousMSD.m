@@ -23,4 +23,4 @@ end
 xPosShort = xPos(startIndex+1:lengthVec-startIndex);
 yPosShort = yPos(startIndex+1:lengthVec-startIndex);
 meanLogSlope = meanLogSlope(startIndex+1:lengthVec-startIndex);
-t = 0:dt:(length(xPos)-1)*dt;
+t = 0:dt:(length(xPosShort)-1)*dt;

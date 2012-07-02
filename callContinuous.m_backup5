@@ -91,26 +91,6 @@ for ii = analyze
     theta{ii} = findAngle(vx{ii},vy{ii});
 end
 
-
-%% Calculate angle and velocity by 3D Douglas Peucker fit:
-
-tol = 65E-9;
-for ii = analyze
-    [ps{ii},ix{ii}] = dpsimplify([xPos{ii},yPos{ii},t{ii}'],tol);
-    nDPSeg(ii) = length(ix{ii})-1;
-    for jj = 1:nDPSeg(ii)
-        vDPSegX = (ps{ii}(jj+1,1) - ps{ii}(jj,1))/(ix{ii}(jj+1)-ix{ii}(jj))/dt;
-        vDPSegY = (ps{ii}(jj+1,2) - ps{ii}(jj,2))/(ix{ii}(jj+1)-ix{ii}(jj))/dt;
-        vDPSeg{ii}(jj) = sqrt(vDPSegX^2 + vDPSegY^2);
-        vDP{ii}(ix{ii}(jj):ix{ii}(jj+1)-1) = vDPSeg{ii}(jj);
-        theta{ii}(ix{ii}(jj):ix{ii}(jj+1)-1) = findAngle(vDPSegX,vDPSegY);
-    end
-    vDP{ii}(length(vDP{ii})+1) = vDP{ii}(length(vDP{ii}));
-    theta{ii}(length(theta{ii}+1)) = theta{ii}(length(theta{ii}));
-end
-
-clear vDPSegX vDPSegY
-
 %% Determine direction. 1 -> moving away from cell body. 0 -> moving toward cell body for ii = analyze
 for ii = analyze
     for jj = 1:length(theta{ii})
@@ -154,8 +134,6 @@ end
 % Note: setType = 1 implies passive motion, 2 implies undetermined, and 3
 % implies active transport
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Start plots
 
 %% Plot trajectories, color coded by transport state
 figure
@@ -170,10 +148,10 @@ end
 
 %% Plot by mean segment direction
 for ii = analyze
-    plotBySegDir(xPos{ii},yPos{ii},event{ii},segDir{ii})
-    title('Plot by segment direction, green away from body')
-    pause
-    clf
+%     plotBySegDir(xPos{ii},yPos{ii},event{ii},segDir{ii})
+%     title('Plot by segment direction, green away from body')
+%     pause
+%     clf
 end
 
 % 
