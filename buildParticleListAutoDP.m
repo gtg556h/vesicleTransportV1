@@ -8,7 +8,7 @@ indexVec = [];
 for ii = 1:nParticles
     t = 0:dt:(length(xPos{ii})-1)*dt;
     %%%%%%%%%%%% FIX SCALING FACTOR ABOVE!!!!!!
-    [ps,ix] = dpsimplify([xPos{ii},yPos{ii},t'],tol);
+    [ps,ix] = dpsimplify([xPos{ii},yPos{ii},(t')/1E4],tol);
     nSegments = length(ix)-1;
     lengthT = 0;
     for jj = 1:nSegments

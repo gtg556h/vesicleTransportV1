@@ -9,29 +9,30 @@ clc
 % Set tolerance for Douglas Peucker fits (used in particle list generation
 % and other analysis
 tol = 65E-9;
+% orginally 65E-9
 
-%% Load data
+%%% Load data
 x = pwd;
 cd ~/doc/research/projects/vesicleTransport/sampleData
 load 1_03min_stretch20_pdms_200fps_extrac.mat
 cd(x)
 
-%% Define direction away from cell body, [0,2pi], 0 associated with positive x-direction
+%%% Define direction away from cell body, [0,2pi], 0 associated with positive x-direction
 theta0 = 0;   %radians
 
-%% Add vesicleTransport library to path
+%%% Add vesicleTransport library to path
 addpath ~/git/vesicleTransport
 
-%% Fix default figure position for erdos
+%%% Fix default figure position for erdos
 set(0,'defaultfigureposition',[330 330 560 420])
 
-%% Constants:
+%%% Constants:
 fps = 200;
 dt = 1/fps;
 dx = 162E-9;
 dy = dx;
 
-%% Put position data in xPos, yPos vectors for each particle
+%%% Put position data in xPos, yPos vectors for each particle
 %for ii = 1:nParticles
 %    p{ii} = [xPos{ii},yPos{ii}];
 %end
@@ -39,10 +40,11 @@ dy = dx;
 %% Build particle list:
 %buildParticleListManual;  % FUNCTION TO MANUALLY SELECT PARTICLES
 %analyze = indexVec;
-[analyze,meanSegLength] = buildParticleListAutoDP(tol,dt,xPos,yPos)
-pause
+%[analyze,meanSegLength] = buildParticleListAutoDP(tol,dt,xPos,yPos);
+%analyze
+%pause
 
-%analyze = [2 6];% 7 18 6 179 15 69 204];
+analyze = [2 6];% 7 18 6 179 15 69 204];
 %analyze = [2 4 6 7 8 10 13 15 18 69 86 94 110 195 204 395 397 403 425 475 476 578 626];
 %% Declare continuout MSD parameters
 maxTau = 260E-3;
@@ -62,13 +64,7 @@ end
 
 
 
-%% Smooth meanLogSlope
-for ii = analyze
-    meanLogSlopeSmooth{ii} = smooth(meanLogSlope{ii},20);
-    indexP = meanLogSlopeSmooth{ii}<1.0;
-%     plot(xPos{ii}(indexP),yPos{ii}(indexP),'r',xPos{ii}(~indexP),yPos{ii}(~indexP),'g')
-%     pause
-end
+
 % 
 %% Plot things (MSD video of sorts)
 % for ii = 300:1458
@@ -102,7 +98,7 @@ end
 
 
 for ii = analyze
-    [ps{ii},ix{ii}] = dpsimplify([xPos{ii},yPos{ii},t{ii}'],tol);
+    [ps{ii},ix{ii}] = dpsimplify([xPos{ii},yPos{ii},(t{ii}')/1E4],tol);
     nDPSeg(ii) = length(ix{ii})-1;
     for jj = 1:nDPSeg(ii)
         vDPSegX = (ps{ii}(jj+1,1) - ps{ii}(jj,1))/(ix{ii}(jj+1)-ix{ii}(jj))/dt;
@@ -177,9 +173,12 @@ end
 
 
 %% Find and run basic processing on individual segments
+
+
 smoothFactor = 30;  %% Important! 
 
 for ii = analyze
+    meanLogSlopeSmooth{ii} = smooth(meanLogSlope{ii},smoothFactor);
     [event{ii},segLength{ii},segState{ii},state{ii},nSeg(ii),segDir{ii},segDistance{ii},segTime{ii},percentActive(ii)] = segFind(meanLogSlope{ii},direction{ii},xPos{ii},yPos{ii},smoothFactor,dt);
 end
 % Note: event is identical to ix{} in DPsimplify output
