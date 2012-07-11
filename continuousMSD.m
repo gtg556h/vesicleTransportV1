@@ -16,7 +16,8 @@ for ii = startIndex + 1:lengthVec - startIndex
     meanLogSlope(ii) = linFit(1);
     
 end
-
+% Note: MSD cell array contains empty vectors for 1:startIndex.  Not
+% important
 
 % Truncate meanLogSlope and xPos, yPos to get rid of startIndex:
 

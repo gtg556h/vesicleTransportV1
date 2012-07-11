@@ -24,7 +24,7 @@ theta0 = 0;   %radians
 addpath ~/git/vesicleTransport
 
 %%% Fix default figure position for erdos
-set(0,'defaultfigureposition',[330 330 560 420])
+%set(0,'defaultfigureposition',[330 330 560 420])
 
 %%% Constants:
 fps = 200;
@@ -157,7 +157,7 @@ for ii = analyze
     countA = 0;
     accumP = 0;
     countP = 0;
-    lengthVec = length(v{ii});
+    lengthVec = length(vSmooth{ii});
     for jj = 1:lengthVec %startIndex:length(v{ii}-startIndex)
         if meanLogSlope{ii}(jj) > 1
             accumA = accumA + vSmooth{ii}(jj);
