@@ -1,7 +1,8 @@
-function [MSD, meanLogSlope, tau, xPosShort, yPosShort, t] = continuousMSD(xPos, yPos, maxTau, slopeMin, slopeMax, dt)
+function [MSD, MSDx, MSDy, meanLogSlope, tau, xPosShort, yPosShort, t] = continuousMSD(xPos, yPos, maxTau, slopeMin, slopeMax, dt)
 
 startIndex = round(maxTau/2/dt);
 lengthVec = length(xPos);
+
 
 
 for ii = startIndex + 1:lengthVec - startIndex

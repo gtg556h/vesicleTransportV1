@@ -1,7 +1,7 @@
 function [event, segLength, segState, state, nSeg, segDir,segDistance,segTime,percentActive] = segFind(meanLogSlope,direction,xPos,yPos,smoothFactor,dt)
 
 %% Define threshold: Active for MSD log slope > threshold etc...
-threshold = 1;
+threshold = 1.4;
 
 
 %% Creat offset vectors and find when smooth function crosses threshold
